@@ -18,4 +18,4 @@ cmake --build "$(get_cmake_build_directory)" --config Release || return 1
 cmake --build "$(get_cmake_build_directory)" --config Release --target install || return 1
 
 # CREATE PACKAGE CONFIG MANUALLY
-create_cpufeatures_package_config "0.7.0" || return 1
+create_cpufeatures_package_config "0.8.0" || return 1
