@@ -3,14 +3,14 @@ apply plugin: 'com.android.library'
 android {
     namespace 'com.arthenica.ffmpegkit'
     compileSdk 31
-    ndkVersion "22.1.7171670"
+    ndkVersion "23.1.7779620"
 
     defaultConfig {
         minSdk 24
         targetSdk 31
         versionCode 240510
         versionName "5.1"
-        project.archivesBaseName = "ffmpeg-kit"
+        project.archivesBaseName = "ffmpeg-kit-5.1-lame"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -58,3 +58,4 @@ dependencies {
 if (System.properties.containsKey('releaseFFmpegKit')) {
     apply from: "${rootProject.projectDir}/../tools/android/release.template.gradle"
 }
+

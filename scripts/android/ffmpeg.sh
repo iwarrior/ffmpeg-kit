@@ -88,6 +88,7 @@ for library in {0..61}; do
         echo -e "\nffmpeg: failed\n\nSee build.log for details\n"
         exit 1
       fi
+      CPU_FEATURES_EXTRA_LIBS="-L${LIB_INSTALL_BASE}/cpu-features/lib -lndk_compat"
       ;;
     dav1d)
       CFLAGS+=" $(pkg-config --cflags dav1d 2>>"${BASEDIR}"/build.log)"
@@ -125,8 +126,8 @@ for library in {0..61}; do
       CONFIGURE_POSTFIX+=" --enable-libkvazaar"
       ;;
     lame)
-      CFLAGS+=" $(pkg-config --cflags libmp3lame 2>>"${BASEDIR}"/build.log)"
-      LDFLAGS+=" $(pkg-config --libs --static libmp3lame 2>>"${BASEDIR}"/build.log)"
+      CFLAGS+=" -I${LIB_INSTALL_BASE}/lame/include"
+      LDFLAGS+=" -L${LIB_INSTALL_BASE}/lame/lib -lmp3lame"
       CONFIGURE_POSTFIX+=" --enable-libmp3lame"
       ;;
     libaom)
@@ -140,10 +141,10 @@ for library in {0..61}; do
       CONFIGURE_POSTFIX+=" --enable-libass"
       ;;
     libiconv)
-      CFLAGS+=" $(pkg-config --cflags libiconv 2>>"${BASEDIR}"/build.log)"
-      LDFLAGS+=" $(pkg-config --libs --static libiconv 2>>"${BASEDIR}"/build.log)"
+      CFLAGS+=" -I${LIB_INSTALL_BASE}/libiconv/include"
+      LDFLAGS+=" -L${LIB_INSTALL_BASE}/libiconv/lib -liconv -lcharset"
       CONFIGURE_POSTFIX+=" --enable-iconv"
-      HIGH_PRIORITY_INCLUDES+=" $(pkg-config --cflags libiconv 2>>"${BASEDIR}"/build.log)"
+      HIGH_PRIORITY_INCLUDES+=" -I${LIB_INSTALL_BASE}/libiconv/include"
       ;;
     libilbc)
       CFLAGS+=" $(pkg-config --cflags libilbc 2>>"${BASEDIR}"/build.log)"
@@ -428,9 +429,8 @@ fi
   --cc="${CC}" \
   --cxx="${CXX}" \
   --ranlib="${RANLIB}" \
-  --strip="${STRIP}" \
   --nm="${NM}" \
-  --extra-libs="$(pkg-config --libs --static cpu-features)" \
+  --extra-libs="${CPU_FEATURES_EXTRA_LIBS}" \
   --disable-autodetect \
   --enable-cross-compile \
   --enable-pic \
@@ -501,7 +501,7 @@ fi
 if [ -d "${FFMPEG_LIBRARY_PATH}" ]; then
   rm -rf "${FFMPEG_LIBRARY_PATH}" 1>>"${BASEDIR}"/build.log 2>&1 || return 1
 fi
-make install 1>>"${BASEDIR}"/build.log 2>&1
+make install STRIP="${STRIP}" 1>>"${BASEDIR}"/build.log 2>&1
 
 if [[ $? -ne 0 ]]; then
   echo -e "failed\n\nSee build.log for details\n"
@@ -540,3 +540,5 @@ else
   echo -e "failed\n\nSee build.log for details\n"
   exit 1
 fi
+
+

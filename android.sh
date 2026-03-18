@@ -15,6 +15,14 @@ export BASEDIR="$(pwd)"
 export FFMPEG_KIT_BUILD_TYPE="android"
 source "${BASEDIR}"/scripts/variable.sh
 source "${BASEDIR}"/scripts/function-${FFMPEG_KIT_BUILD_TYPE}.sh
+
+# --- Force Windows host tag on MSYS2/MINGW to avoid 'cygwin-x86_64' ---
+get_toolchain() { echo "windows-x86_64"; }
+get_host_tag()  { echo "windows-x86_64"; }
+android_toolchain_prebuilt() {  # 혹시 해당 함수가 있다면 덮어쓰기
+  echo "$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/windows-x86_64"
+}
+
 disabled_libraries=()
 
 # SET DEFAULTS SETTINGS
@@ -368,8 +376,16 @@ if [[ -n ${ANDROID_ARCHITECTURES} ]]; then
     echo -e -n "\nCreating Android archive under prebuilt: "
 
     # BUILD ANDROID ARCHIVE
-    rm -f "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/ffmpeg-kit-release.aar 1>>"${BASEDIR}"/build.log 2>&1
+    SOURCE_AAR_NAME="ffmpeg-kit-release.aar"
+    AAR_NAME="ffmpeg-kit-5.1-lame-release.aar"
+    rm -f "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/${AAR_NAME} 1>>"${BASEDIR}"/build.log 2>&1
     ./gradlew ffmpeg-kit-android-lib:clean ffmpeg-kit-android-lib:assembleRelease ffmpeg-kit-android-lib:testReleaseUnitTest 1>>"${BASEDIR}"/build.log 2>&1
+    if [ $? -ne 0 ]; then
+      echo -e "failed\n"
+      exit 1
+    fi
+
+    cp "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/${SOURCE_AAR_NAME} "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/${AAR_NAME} 1>>"${BASEDIR}"/build.log 2>&1
     if [ $? -ne 0 ]; then
       echo -e "failed\n"
       exit 1
@@ -379,15 +395,8 @@ if [[ -n ${ANDROID_ARCHITECTURES} ]]; then
     FFMPEG_KIT_AAR="${BASEDIR}/prebuilt/$(get_aar_directory)/ffmpeg-kit"
     rm -rf "${FFMPEG_KIT_AAR}" 1>>"${BASEDIR}"/build.log 2>&1
     mkdir -p "${FFMPEG_KIT_AAR}" 1>>"${BASEDIR}"/build.log 2>&1
-    cp "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/ffmpeg-kit-release.aar "${FFMPEG_KIT_AAR}"/ffmpeg-kit.aar 1>>"${BASEDIR}"/build.log 2>&1
+    cp "${BASEDIR}"/android/ffmpeg-kit-android-lib/build/outputs/aar/${AAR_NAME} "${FFMPEG_KIT_AAR}/${AAR_NAME}" 1>>"${BASEDIR}"/build.log 2>&1
     if [ $? -ne 0 ]; then
       echo -e "failed\n"
       exit 1
     fi
-
-    echo -e "INFO: Created ffmpeg-kit Android archive successfully.\n" 1>>"${BASEDIR}"/build.log 2>&1
-    echo -e "ok\n"
-  else
-    echo -e "INFO: Skipped creating Android archive.\n" 1>>"${BASEDIR}"/build.log 2>&1
-  fi
-fi
