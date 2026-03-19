@@ -400,3 +400,7 @@ if [[ -n ${ANDROID_ARCHITECTURES} ]]; then
       echo -e "failed\n"
       exit 1
     fi
+
+    echo "ok"
+  fi
+fi

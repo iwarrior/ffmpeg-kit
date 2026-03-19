@@ -433,20 +433,20 @@ get_size_optimization_ldflags() {
   arm64-v8a)
     case $1 in
     ffmpeg)
-      echo "-Wl,--gc-sections ${LINK_TIME_OPTIMIZATION_FLAGS} -fuse-ld=lld -O2 -ffunction-sections -fdata-sections -finline-functions"
+      echo "-Wl,--gc-sections -Wl,-z,max-page-size=16384 ${LINK_TIME_OPTIMIZATION_FLAGS} -fuse-ld=lld -O2 -ffunction-sections -fdata-sections -finline-functions"
       ;;
     *)
-      echo "-Wl,--gc-sections -Os -ffunction-sections -fdata-sections"
+      echo "-Wl,--gc-sections -Wl,-z,max-page-size=16384 -Os -ffunction-sections -fdata-sections"
       ;;
     esac
     ;;
   *)
     case $1 in
     ffmpeg)
-      echo "-Wl,--gc-sections,--icf=safe ${LINK_TIME_OPTIMIZATION_FLAGS} -O2 -ffunction-sections -fdata-sections -finline-functions"
+      echo "-Wl,--gc-sections,--icf=safe -Wl,-z,max-page-size=16384 ${LINK_TIME_OPTIMIZATION_FLAGS} -O2 -ffunction-sections -fdata-sections -finline-functions"
       ;;
     *)
-      echo "-Wl,--gc-sections,--icf=safe -Os -ffunction-sections -fdata-sections"
+      echo "-Wl,--gc-sections,--icf=safe -Wl,-z,max-page-size=16384 -Os -ffunction-sections -fdata-sections"
       ;;
     esac
     ;;
@@ -1088,4 +1088,5 @@ build_android_lts_support() {
   "${CC}" ${CFLAGS} -Wno-unused-command-line-argument -c "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.c -o "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.o ${LDFLAGS} 1>>"${BASEDIR}"/build.log 2>&1
   "${AR}" rcs "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/libandroidltssupport.a "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.o 1>>"${BASEDIR}"/build.log 2>&1
 }
+
 

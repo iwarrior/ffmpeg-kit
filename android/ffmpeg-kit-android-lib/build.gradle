@@ -1,16 +1,18 @@
 apply plugin: 'com.android.library'
 
 android {
-    namespace 'com.arthenica.ffmpegkit'
-    compileSdk 31
-    ndkVersion "23.1.7779620"
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.arthenica.ffmpegkit'
+    }
+    compileSdk 33
+    ndkVersion "22.1.7171670"
 
     defaultConfig {
         minSdk 24
-        targetSdk 31
-        versionCode 240510
-        versionName "5.1"
-        project.archivesBaseName = "ffmpeg-kit-5.1-lame"
+        targetSdk 33
+        versionCode 240600
+        versionName "6.0"
+        project.archivesBaseName = "ffmpeg-kit"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -39,6 +41,7 @@ android {
         }
     }
 
+
     publishing {
         singleVariant('release') {
             withJavadocJar()
@@ -61,4 +64,3 @@ dependencies {
     testImplementation "androidx.test.ext:junit:1.1.5"
     testImplementation 'org.json:json:20230618'
 }
-
