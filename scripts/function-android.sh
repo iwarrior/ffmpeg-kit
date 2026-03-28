@@ -433,20 +433,20 @@ get_size_optimization_ldflags() {
   arm64-v8a)
     case $1 in
     ffmpeg)
-      echo "-Wl,--gc-sections ${LINK_TIME_OPTIMIZATION_FLAGS} -fuse-ld=lld -O2 -ffunction-sections -fdata-sections -finline-functions"
+      echo "-Wl,--gc-sections -Wl,-z,max-page-size=16384 ${LINK_TIME_OPTIMIZATION_FLAGS} -fuse-ld=lld -O2 -ffunction-sections -fdata-sections -finline-functions"
       ;;
     *)
-      echo "-Wl,--gc-sections -Os -ffunction-sections -fdata-sections"
+      echo "-Wl,--gc-sections -Wl,-z,max-page-size=16384 -Os -ffunction-sections -fdata-sections"
       ;;
     esac
     ;;
   *)
     case $1 in
     ffmpeg)
-      echo "-Wl,--gc-sections,--icf=safe ${LINK_TIME_OPTIMIZATION_FLAGS} -O2 -ffunction-sections -fdata-sections -finline-functions"
+      echo "-Wl,--gc-sections,--icf=safe -Wl,-z,max-page-size=16384 ${LINK_TIME_OPTIMIZATION_FLAGS} -O2 -ffunction-sections -fdata-sections -finline-functions"
       ;;
     *)
-      echo "-Wl,--gc-sections,--icf=safe -Os -ffunction-sections -fdata-sections"
+      echo "-Wl,--gc-sections,--icf=safe -Wl,-z,max-page-size=16384 -Os -ffunction-sections -fdata-sections"
       ;;
     esac
     ;;
@@ -514,7 +514,7 @@ create_chromaprint_package_config() {
   local CHROMAPRINT_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/libchromaprint.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/chromaprint
+prefix=${LIB_INSTALL_BASE}/chromaprint
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -532,7 +532,7 @@ create_fontconfig_package_config() {
   local FONTCONFIG_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/fontconfig.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/fontconfig
+prefix=${LIB_INSTALL_BASE}/fontconfig
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -557,7 +557,7 @@ create_freetype_package_config() {
   local FREETYPE_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/freetype2.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/freetype
+prefix=${LIB_INSTALL_BASE}/freetype
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -578,7 +578,7 @@ create_giflib_package_config() {
   local GIFLIB_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/giflib.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/giflib
+prefix=${LIB_INSTALL_BASE}/giflib
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -597,7 +597,7 @@ create_gmp_package_config() {
   local GMP_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/gmp.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/gmp
+prefix=${LIB_INSTALL_BASE}/gmp
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -616,7 +616,7 @@ create_gnutls_package_config() {
   local GNUTLS_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/gnutls.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/gnutls
+prefix=${LIB_INSTALL_BASE}/gnutls
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -636,7 +636,7 @@ create_libaom_package_config() {
   local AOM_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/aom.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libaom
+prefix=${LIB_INSTALL_BASE}/libaom
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -655,7 +655,7 @@ create_libiconv_package_config() {
   local LIB_ICONV_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/libiconv.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libiconv
+prefix=${LIB_INSTALL_BASE}/libiconv
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -674,7 +674,7 @@ create_libmp3lame_package_config() {
   local LAME_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/libmp3lame.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/lame
+prefix=${LIB_INSTALL_BASE}/lame
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -693,7 +693,7 @@ create_libvorbis_package_config() {
   local LIBVORBIS_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/vorbis.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libvorbis
+prefix=${LIB_INSTALL_BASE}/libvorbis
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -708,7 +708,7 @@ Cflags: -I\${includedir}
 EOF
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/vorbisenc.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libvorbis
+prefix=${LIB_INSTALL_BASE}/libvorbis
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -724,7 +724,7 @@ Cflags: -I\${includedir}
 EOF
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/vorbisfile.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libvorbis
+prefix=${LIB_INSTALL_BASE}/libvorbis
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -744,7 +744,7 @@ create_libxml2_package_config() {
   local LIBXML2_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/libxml-2.0.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libxml2
+prefix=${LIB_INSTALL_BASE}/libxml2
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -764,7 +764,7 @@ create_snappy_package_config() {
   local SNAPPY_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/snappy.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/snappy
+prefix=${LIB_INSTALL_BASE}/snappy
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -783,7 +783,7 @@ create_soxr_package_config() {
   local SOXR_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/soxr.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/soxr
+prefix=${LIB_INSTALL_BASE}/soxr
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -822,7 +822,7 @@ create_tesseract_package_config() {
   local TESSERACT_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/tesseract.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/tesseract
+prefix=${LIB_INSTALL_BASE}/tesseract
 exec_prefix=\${prefix}
 bindir=\${exec_prefix}/bin
 datarootdir=\${prefix}/share
@@ -845,7 +845,7 @@ create_uuid_package_config() {
   local UUID_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/uuid.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/libuuid
+prefix=${LIB_INSTALL_BASE}/libuuid
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/lib
 includedir=\${prefix}/include
@@ -863,7 +863,7 @@ create_x265_package_config() {
   local X265_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/x265.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/x265
+prefix=${LIB_INSTALL_BASE}/x265
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -882,7 +882,7 @@ create_xvidcore_package_config() {
   local XVIDCORE_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/xvidcore.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/xvidcore
+prefix=${LIB_INSTALL_BASE}/xvidcore
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
 includedir=\${prefix}/include
@@ -938,7 +938,7 @@ create_cpufeatures_package_config() {
   local CPU_FEATURES_VERSION="$1"
 
   cat >"${INSTALL_PKG_CONFIG_DIR}/cpu-features.pc" <<EOF
-prefix="${LIB_INSTALL_BASE}"/cpu-features
+prefix=${LIB_INSTALL_BASE}/cpu-features
 exec_prefix=\${prefix}/bin
 libdir=\${prefix}/lib
 includedir=\${prefix}/include/ndk_compat
@@ -1088,3 +1088,5 @@ build_android_lts_support() {
   "${CC}" ${CFLAGS} -Wno-unused-command-line-argument -c "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.c -o "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.o ${LDFLAGS} 1>>"${BASEDIR}"/build.log 2>&1
   "${AR}" rcs "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/libandroidltssupport.a "${BASEDIR}"/android/ffmpeg-kit-android-lib/src/main/cpp/android_lts_support.o 1>>"${BASEDIR}"/build.log 2>&1
 }
+
+
